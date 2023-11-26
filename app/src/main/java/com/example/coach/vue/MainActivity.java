@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.coach.R;
 import com.example.coach.controleur.Controle;
+import com.example.coach.modele.Profil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText txtTaille;
     private EditText txtAge;
     private RadioButton rdHomme;
+    private RadioButton rdFemme;
     private TextView lblIMG;
     private ImageView imgSmiley;
     private Button btnCalc;
@@ -37,11 +39,13 @@ public class MainActivity extends AppCompatActivity {
         txtTaille = (EditText) findViewById(R.id.txtTaille);
         txtAge = (EditText) findViewById(R.id.txtAge);
         rdHomme = (RadioButton) findViewById(R.id.rdHomme);
+        rdFemme = (RadioButton) findViewById(R.id.rdFemme);
         lblIMG = (TextView) findViewById(R.id.lblIMG);
         imgSmiley = (ImageView) findViewById(R.id.imgSmiley);
         btnCalc = (Button) findViewById(R.id.btnCalc);
-        controle = controle.getInstance();
+        controle = controle.getInstance(this);
         ecouteCalcul();
+        recupProfil();
     }
 
     /**
@@ -78,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
      */
 
     private void affichResult(int poids, int taille, int age, int sexe){
-        controle.creerProfil(poids, taille, age, sexe);
+        controle.creerProfil(poids, taille, age, sexe, this);
         float img = controle.getImg();
         String message = controle.getMessage();
         switch (message){
@@ -96,6 +100,22 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         lblIMG.setText(String.format("%.01f", img)+" : IMG "+message);
+    }
+
+    private void recupProfil(){
+        if(controle.getTaille() != null){
+            txtTaille.setText(""+controle.getTaille());
+            txtPoids.setText(""+controle.getPoids());
+            txtAge.setText(""+controle.getAge());
+            if(controle.getSexe() == 0){
+                rdFemme.setChecked(true);
+            }else{
+                rdHomme.setChecked(true);
+            }
+            btnCalc.performClick();
+        }
+
+
     }
 
     @Override

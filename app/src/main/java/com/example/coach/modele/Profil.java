@@ -1,12 +1,14 @@
 package com.example.coach.modele;
 
+
+import java.io.Serializable;
 /**
  * Classe métier Profil
  * contient les informations du profil
  */
 
 
-public class Profil {
+public class Profil implements Serializable {
     private static final Integer minFemme = 15;
     private static final Integer maxFemme = 30;
     private static final Integer minHomme = 10;
