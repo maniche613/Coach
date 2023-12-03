@@ -1,10 +1,14 @@
 package com.example.coach.controleur;
-
+import android.content.Context;
+import com.example.coach.modele.AccesDistant;
 import com.example.coach.modele.AccesLocal;
 import com.example.coach.modele.Profil;
 import com.example.coach.outils.Serializer;
-import android.content.Context;
 import android.widget.TextView;
+import com.example.coach.vue.MainActivity;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.Date;
 
@@ -15,11 +19,16 @@ public final class Controle {
     private static Controle instance;
     private static Profil profil;
     private static String nomFic = "saveprofil";
-    private AccesLocal accesLocal;
+    //private AccesLocal accesLocal;
+    private static AccesDistant accesDistant;
+    private static Context context;
     private Controle(Context context){
        // recupSerialize(context);
-        accesLocal = AccesLocal.getInstance(context);
-        profil = accesLocal.recupDernier();
+       //accesLocal = AccesLocal.getInstance(context);
+        //profil = accesLocal.recupDernier();
+        if(context != null) {
+            Controle.context = context;
+        }
 
     }
     /**
@@ -29,6 +38,8 @@ public final class Controle {
     public final static Controle getInstance(Context context){
         if(instance == null){
             instance = new Controle(context);
+            accesDistant = AccesDistant.getInstance();
+            accesDistant.envoi("dernier", new JSONObject());
         }
         return instance;
     }
@@ -39,9 +50,10 @@ public final class Controle {
      * @param age
      * @param sexe 1 pour homme, 0 pour femme
      */
-    public void creerProfil(int poids, int taille, int age, int sexe, Context context) {
+    public void creerProfil(int poids, int taille, int age, int sexe) {
         profil = new Profil(poids, taille, age, sexe, new Date());
-        accesLocal.ajout(profil);
+        accesDistant.envoi("enreg", profil.convertToJSONObject());
+       // accesLocal.ajout(profil);
         //Serializer.serialize(nomFic, profil, context );
     }
     /**
@@ -118,5 +130,13 @@ public final class Controle {
 
     private static void recupSerialize(Context context){
         profil = (Profil)Serializer.deSerialize(nomFic, context);
+    }
+    /**
+     * Valorisation du profil
+     * @param profil
+     */
+    public void setProfil(Profil profil){
+        Controle.profil = profil;
+        ((MainActivity)context).recupProfil();
     }
 }

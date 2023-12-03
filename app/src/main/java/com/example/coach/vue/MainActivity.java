@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         btnCalc = (Button) findViewById(R.id.btnCalc);
         controle = controle.getInstance(this);
         ecouteCalcul();
-        recupProfil();
+        //recupProfil();
     }
 
     /**
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
      */
 
     private void affichResult(int poids, int taille, int age, int sexe){
-        controle.creerProfil(poids, taille, age, sexe, this);
+        controle.creerProfil(poids, taille, age, sexe);
         float img = controle.getImg();
         String message = controle.getMessage();
         switch (message){
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         lblIMG.setText(String.format("%.01f", img)+" : IMG "+message);
     }
 
-    private void recupProfil(){
+    public void recupProfil(){
         if(controle.getTaille() != null){
             txtTaille.setText(""+controle.getTaille());
             txtPoids.setText(""+controle.getPoids());
